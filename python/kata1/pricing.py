@@ -8,7 +8,7 @@ class PriceCalculator:
     def calc(self, sale):
         total = self.calc_total(sale)
         discount = self.calc_discount(sale, total)
-        return round(x - discount, 2), discount
+        return round(total - discount, 2), discount
 
     def calc_total(self, sale):
         return sum(item.price * item.quantity for item in sale.items)
