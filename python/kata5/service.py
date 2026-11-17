@@ -3,6 +3,12 @@ from delivery import EmailConfirmationSender
 from rates import TicketRates
 from storage import CsvRegistrationStore
 
+DAYS_UNTIL_EVENT_DISCOUNT_TIME = 30
+DAYS_UNTIL_EVENT_DISCOUNT = 0.85
+GROUP_SIZE_DISCOUNT = 0.9
+MEAL_RATE = 20.0
+TAX_RATE = 1.07
+SERVICE_PRICE = 5.0
 
 class RegistrationService:
     def __init__(self, conference):
@@ -28,13 +34,13 @@ class RegistrationService:
         a = self.pending
         base = self.rates.base_for(a.ticket_type)
         subtotal = base * a.group_size
-        if self.conference.days_until_event >= 30:
-            subtotal *= 0.85
+        if self.conference.days_until_event >= DAYS_UNTIL_EVENT_DISCOUNT_TIME:
+            subtotal *= DAYS_UNTIL_EVENT_DISCOUNT
         if a.group_size >= 3:
-            subtotal *= 0.90
+            subtotal *= GROUP_SIZE_DISCOUNT
         if a.wants_meal:
-            subtotal += 20 * a.group_size
-        total = round((subtotal + 5) * 1.07, 2)
+            subtotal += MEAL_RATE * a.group_size
+        total = round((subtotal + SERVICE_PRICE) * TAX_RATE, 2)
         self.audit.append(f"QUOTED {a.email} EUR {total:.2f}")
         return total
 
