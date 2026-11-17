@@ -6,10 +6,14 @@ class PriceCalculator:
         self.rules = DiscountRules()
 
     def calc(self, sale):
-        x = 0
-        for item in sale.items:
-            x += item.price * item.quantity
-        discount = self.rules.amount(sale, x)
+        total = self.calc_total(sale)
+        discount = self.calc_discount(sale, total)
         if sale.member and x >= 20:
             print("Member discount applied")
         return round(x - discount, 2), discount
+
+    def calc_total(self, sale):
+        return sum(item.price * item.quantity for item in sale.items)
+
+    def calc_discount(self, sale, total):
+        return self.rules.amount(sale, total)
