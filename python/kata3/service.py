@@ -3,6 +3,7 @@ from rates import RoomRateTable
 from storage import CsvBookingStore
 from validation import BookingValidator
 
+BREAKFAST_RATE = 12
 
 class BookingService:
     def __init__(self):
@@ -15,7 +16,7 @@ class BookingService:
         self.validator.validate(booking)
         total = self.rates.rate_for(booking.room_type) * booking.nights
         if booking.breakfast:
-            total += booking.nights * 12
+            total += booking.nights * BREAKFAST_RATE
         self.store.save(booking, total)
         self.sender.send(booking, total)
         return total
