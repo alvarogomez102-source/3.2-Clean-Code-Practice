@@ -1,4 +1,5 @@
 from exporters import CsvExporter, HtmlExporter, JsonExporter
+from python.kata4 import exporters
 
 
 class ExportJob:
@@ -15,16 +16,17 @@ class ExportJob:
     def run(self, format_name):
         if self.records is None:
             raise RuntimeError("Call prepare() before run()")
-        if format_name == "csv":
-            exporter = CsvExporter()
-            content = exporter.to_csv(self.records)
-        elif format_name == "json":
-            exporter = JsonExporter()
-            content = exporter.to_json(self.records)
-        elif format_name == "html":
-            exporter = HtmlExporter()
-            content = exporter.to_html(self.records)
-        else:
+        exporters = {
+            "csv": (CsvExporter, "to_csv"),
+            "json": (JsonExporter, "to_json"),
+            "html": (HtmlExporter, "to_html")
+        }
+
+        if format_name not in exporters:
             raise ValueError("Unknown format")
+
+        exporter_class, method_name = exporters[format_name]
+        exporter = exporter_class()
+        content = getattr(exporter, method_name)(self.records)
         print(f"Exported {self.title} as {format_name.upper()}")
         return content
