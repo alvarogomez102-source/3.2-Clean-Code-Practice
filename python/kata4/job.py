@@ -2,18 +2,15 @@ from exporters import CsvExporter, HtmlExporter, JsonExporter
 
 
 class ExportJob:
-    def __init__(self):
-        self.records = None
-        self.title = None
-
-    def prepare(self, title, sales):
+    def __init__(self, title, sales):
         self.title = title
-        self.records = []
-        for sale in sales:
-            revenue = round(sale.units * sale.unit_price, 2)
-            self.records.append(
-                {"product": sale.product, "units": sale.units, "revenue": revenue}
-            )
+        self.records = [
+            {
+                "product": sale.product,
+                "units": sale.units,
+                "revenue": round(sale.units * sale.unit_price, 2)
+            } for sale in sales
+        ]
 
     def run(self, format_name):
         if self.records is None:
