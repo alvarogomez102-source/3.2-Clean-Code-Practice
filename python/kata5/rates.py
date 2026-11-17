@@ -1,9 +1,10 @@
 class TicketRates:
     def base_for(self, ticket_type):
-        if ticket_type == "standard":
-            return 120
-        if ticket_type == "student":
-            return 80
-        if ticket_type == "sponsor":
-            return 250
+        rates = {
+            "standard": 120,
+            "student": 80,
+            "sponsor": 250
+        }
+        if ticket_type in rates:
+            return rates[ticket_type]
         raise ValueError("Unknown ticket type")
