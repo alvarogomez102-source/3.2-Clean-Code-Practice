@@ -8,8 +8,6 @@ class PriceCalculator:
     def calc(self, sale):
         total = self.calc_total(sale)
         discount = self.calc_discount(sale, total)
-        if sale.member and x >= 20:
-            print("Member discount applied")
         return round(x - discount, 2), discount
 
     def calc_total(self, sale):
